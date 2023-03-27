@@ -50,8 +50,9 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Imagen, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Imagen, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-10">                
+                @Html.TextBoxFor(model => model.Imagen, new { type = "file", accept = "image/*" })
+
                 @Html.ValidationMessageFor(model => model.Imagen, "", new { @class = "text-danger" })
             </div>
         </div>
