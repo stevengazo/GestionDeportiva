@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GestionDeportiva.Models;
+using System.IO;
+using System.Drawing;
 
 namespace GestionDeportiva.Controllers
 {
@@ -49,11 +51,20 @@ namespace GestionDeportiva.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "EventoId,Nombre,Descripcion,Fecha,Lugar,Imagen,TipoEventoId")] Eventos eventos)
+        public async Task<ActionResult> Create([Bind(Include = "EventoId,Nombre,Descripcion,Fecha,Lugar,TipoEventoId")] Eventos eventos)
         {
-            if (ModelState.IsValid)
+
+
+			if (ModelState.IsValid)
             {
-                db.Eventos.Add(eventos);
+                if (Request.FilePath[0] != null)
+                {
+					var file = Request.Files[0];
+					MemoryStream target = new MemoryStream();
+					file.InputStream.CopyTo(target);
+					eventos.Imagen = target.ToArray();
+				}
+				db.Eventos.Add(eventos);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }

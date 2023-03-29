@@ -1,4 +1,6 @@
-﻿@model IEnumerable<GestionDeportiva.Models.Eventos>
+﻿@using System.Drawing;
+@model IEnumerable<GestionDeportiva.Models.Eventos>
+
 
 @{
     ViewBag.Title = "Index";
@@ -33,7 +35,8 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{       
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Nombre)
@@ -47,11 +50,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.Lugar)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Imagen)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TiposEventos.Nombre)
+        <td>                 
+            <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" width="500" height="400"  />
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.EventoId }) |

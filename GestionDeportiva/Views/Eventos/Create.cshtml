@@ -8,7 +8,7 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm(null,null,FormMethod.Post,new {id="formPostEvento"})) 
+@using (Html.BeginForm(null,null,FormMethod.Post,new {id="formPostEvento", enctype= "multipart/form-data"})) 
 {
     @Html.AntiForgeryToken()
     
@@ -52,7 +52,6 @@
             @Html.LabelFor(model => model.Imagen, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">                
                 @Html.TextBoxFor(model => model.Imagen, new { type = "file", accept = "image/*" })
-
                 @Html.ValidationMessageFor(model => model.Imagen, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -79,7 +78,7 @@
 
 <script>
     $("#formPostEvento").submit(function (e) {
-        e.preventDefault();
+       // e.preventDefault();
         console.log(e);
     });
 </script>
