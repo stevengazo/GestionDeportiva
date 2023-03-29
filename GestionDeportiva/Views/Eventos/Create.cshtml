@@ -51,6 +51,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Imagen, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">                
+                <!-- Control para inserción de fotos, permite añadirle fotos a la pagina web. estas se enviaran mediante el modelo                    
+                    -->
                 @Html.TextBoxFor(model => model.Imagen, new { type = "file", accept = "image/*" })
                 @Html.ValidationMessageFor(model => model.Imagen, "", new { @class = "text-danger" })
             </div>

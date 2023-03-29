@@ -59,7 +59,11 @@ namespace GestionDeportiva.Controllers
             {
                 if (Request.FilePath[0] != null)
                 {
+                    /*
+                     recibe la imagen en Request.Files 
+                     */
 					var file = Request.Files[0];
+                    // Convierte el archivo recibido en un Byte[] para luego asignarlo al Objeto de tipo Evento (el cual se almacenará en la base de datos)
 					MemoryStream target = new MemoryStream();
 					file.InputStream.CopyTo(target);
 					eventos.Imagen = target.ToArray();

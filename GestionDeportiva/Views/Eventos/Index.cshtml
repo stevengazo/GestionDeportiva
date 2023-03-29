@@ -7,58 +7,103 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Imagen)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TiposEventos.Nombre)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model)
-{       
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Descripcion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Fecha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lugar)
-        </td>
-        <td>                 
-            <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" width="500" height="400"  />
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EventoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EventoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EventoId })
-        </td>
-    </tr>
-}
+<hr />
 
-</table>
+<h1>
+    Activades Recreativas
+</h1>
+
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @foreach (var item in Model)
+        {
+            <div class="carousel-item active">
+                <!-- Explicación src= ($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")
+                    el {Convert.ToBase64String(item.Imagen) convierte el Byte[] que viene desde la DB y lo convierte en un Base64 interpretable por el navegador
+                -->
+                <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class="d-block w-100 h-100" alt="...">
+                <div class="carousel-caption d-none d-md-block bg-dark opacity-75 rounded-2 ">
+                    <h5>@item.Nombre</h5>
+                    <p>@item.Descripcion</p>
+                    <p>@item.Fecha.Value.ToLongDateString()</p>
+                </div>
+            </div>
+        }
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+
+
+<hr />
+
+<div class="d-flex  bg-opacity-50" style="background-color:lightgray">
+
+    <h2>Tabla de Eventos</h2>
+    <table class="table table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lugar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TiposEventos.Nombre)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td>
+                    <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class="w-75 h-75" />
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.EventoId , @class="btn btn-outline-success" }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.EventoId, @class = "btn btn-outline-info" }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.EventoId, @class = "btn btn-outline-delete" })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+</div>
