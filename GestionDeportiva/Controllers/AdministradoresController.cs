@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Security.Cryptography;
 using GestionDeportiva.Models;
 
 namespace GestionDeportiva.Controllers
@@ -51,6 +52,9 @@ namespace GestionDeportiva.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                administradores.HashContrasena = GetMD5Hash(administradores.HashContrasena);
+
                 db.Administradores.Add(administradores);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -134,6 +138,11 @@ namespace GestionDeportiva.Controllers
         {
             try
             {
+                login.LoginPassword = GetMD5Hash(login.LoginPassword);
+
+
+                // Logica de validación
+
                 return View();
             }catch(Exception f)
             {
@@ -142,5 +151,19 @@ namespace GestionDeportiva.Controllers
 			}
             
         }
-    }
+		private String GetMD5Hash(String input)
+		{
+			MD5CryptoServiceProvider x = new MD5CryptoServiceProvider();
+			byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+			bs = x.ComputeHash(bs);
+			System.Text.StringBuilder s = new System.Text.StringBuilder();
+			foreach (byte b in bs)
+			{
+				s.Append(b.ToString("x2").ToLower());
+			}
+			String hash = s.ToString();
+			return hash;
+		}
+
+	}
 }
