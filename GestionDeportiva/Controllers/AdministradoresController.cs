@@ -124,5 +124,23 @@ namespace GestionDeportiva.Controllers
             }
             base.Dispose(disposing);
         }
+        [HttpGet]
+		public async Task<ActionResult> Login()
+		{
+			return View();
+		}
+        [HttpPost]
+		public async Task<ActionResult> Login([Bind(Include = "LoginUser,LoginPassword")] LoginModel login)
+        {
+            try
+            {
+                return View();
+            }catch(Exception f)
+            {
+                ViewBag.ErrorMessage = f.Message;
+				return View();
+			}
+            
+        }
     }
 }
