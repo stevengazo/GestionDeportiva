@@ -20,7 +20,7 @@ namespace GestionDeportiva.Controllers
         // GET: Eventos
         public async Task<ActionResult> Index()
         {
-            var eventos = db.Eventos.Include(e => e.TiposEventos);
+            var eventos = db.Eventos.Include(e => e.TiposEventos).OrderByDescending(e => e.Fecha);           
             return View(await eventos.ToListAsync());
         }
 

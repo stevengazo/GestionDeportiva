@@ -5,63 +5,61 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Eventos</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Lugar)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Imagen)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Imagen)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TiposEventos.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TiposEventos.Nombre)
-        </dd>
-
-    </dl>
+<div class="d-flex flex-column">
+    <div class="d-flex justify-content-center">
+        <h2>Detalles del Evento  @Model.Nombre</h2>
+    </div>
 </div>
+<div class="container border-1 border-opacity-50 border-secondary rounded-1 rounded p-2">
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(Model.Imagen)}")" class="d-block w-100 h-100" alt="..." />
+                </div>
+                <div class="col-md-4 rounded rounded-1">
+                    <h4>
+                        Descripción
+                    </h4>
+                    <p>
+                        @Model.Descripcion
+                    </p>
+                    <hr />
+                    <h4>
+                        Fecha del evento
+                    </h4>
+                    <p>
+                        @Model.Fecha.Value.ToLongDateString() a las @Model.Fecha.Value.ToLongTimeString()
+                    </p>
+                    <hr />
+                    <h4>
+                        Lugar
+                    </h4>
+                    <p>
+                        @Model.Lugar
+                    </p>
+                    <hr />
+                    <h4>
+                        Tipo
+                    </h4>
+                    <p>
+                        @Model.TiposEventos.Nombre
+                    </p>
+                </div>
+            </div>
+        </div>      
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.EventoId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-info" })
 </p>
