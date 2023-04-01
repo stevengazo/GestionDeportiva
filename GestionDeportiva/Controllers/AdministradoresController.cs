@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Security.Cryptography;
 using GestionDeportiva.Models;
+using System.Threading;
 
 namespace GestionDeportiva.Controllers
 {
@@ -54,12 +55,10 @@ namespace GestionDeportiva.Controllers
             {
 
                 administradores.HashContrasena = GetMD5Hash(administradores.HashContrasena);
-
                 db.Administradores.Add(administradores);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
             return View(administradores);
         }
 
@@ -97,16 +96,25 @@ namespace GestionDeportiva.Controllers
         // GET: Administradores/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
+            var user = Session["UserProfile"];
+            if (user != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Administradores administradores = await db.Administradores.FindAsync(id);
-            if (administradores == null)
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				Administradores administradores = await db.Administradores.FindAsync(id);
+				if (administradores == null)
+				{
+					return HttpNotFound();
+				}
+				return View(administradores);
+			}
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction(nameof(Login));
             }
-            return View(administradores);
+
         }
 
         // POST: Administradores/Delete/5
@@ -139,17 +147,28 @@ namespace GestionDeportiva.Controllers
             try
             {
                 login.LoginPassword = GetMD5Hash(login.LoginPassword);
-
-
                 // Logica de validación
-
+                bool LoginSucess = validateLogin(login.LoginUser, login.LoginPassword, out int idUsuario);
+                if (LoginSucess)
+                {
+                    Administradores UserActive = GetAdministradores(idUsuario);
+                    Session["UserProfile"] = UserActive;
+                    Session["UserName"] = UserActive.Nombre;
+					return RedirectToAction(nameof(Index));
+                }
                 return View();
             }catch(Exception f)
             {
                 ViewBag.ErrorMessage = f.Message;
 				return View();
-			}
-            
+			}            
+        }        
+
+        public async Task<ActionResult> CloseSession()
+        {
+            Session["UserProfile"] = null;
+            Session.Abandon();
+			return RedirectToAction("Index", "Eventos");
         }
 		private String GetMD5Hash(String input)
 		{
@@ -164,6 +183,48 @@ namespace GestionDeportiva.Controllers
 			String hash = s.ToString();
 			return hash;
 		}
-
+        private bool validateLogin(string usuario, string passwordHash, out int idUsuario)
+        {
+            try
+            {
+                int LinqResult = (from admin in db.Administradores
+                                  where admin.NombreUsuario.ToLower() == usuario.ToLower() && admin.HashContrasena == passwordHash
+                                  select admin.AdministradorId).FirstOrDefault();
+                if(LinqResult != 0)
+                {
+                    idUsuario = LinqResult;
+                    return true;
+                }
+                else
+                {
+                    idUsuario = 0;
+                    return false;
+                }
+                
+            }catch(Exception f)
+            {
+				idUsuario = 0;
+				return false;
+            }
+        }
+        private Administradores GetAdministradores(int id)
+        {
+            try
+            {
+                var user = (from admin in db.Administradores
+                            where admin.AdministradorId == id
+                            select admin).FirstOrDefault();
+                if (user != null)
+                {
+                    user.HashContrasena = string.Empty;
+                }
+                return user;
+			}
+			catch(Exception f)
+            {
+                Console.WriteLine(f.Message);
+                return null;
+            }
+        }
 	}
 }

@@ -32,9 +32,20 @@
                     </li>
                     <li class="nav-item">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Administradores", "Index", "Administradores", null, new { @class = "nav-link" })</li>                    
+                    <li class="nav-item">@Html.ActionLink("Administradores", "Index", "Administradores", null, new { @class = "nav-link" })</li>
                 </ul>
             </div>
+        </div>
+        <div>
+            @{
+                var user = (GestionDeportiva.Models.Administradores)Session["UserProfile"];
+                if (user != null)
+                {
+                    <label>
+                        Hola @user.Nombre
+                    </label>
+                }
+            }
         </div>
     </nav>
     <div class="container body-content">
