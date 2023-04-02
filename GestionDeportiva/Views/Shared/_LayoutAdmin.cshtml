@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Modo Admin - @ViewBag.Title </title>
 
     <script src="~/Content/Site.js"></script>
     <script src="~/Scripts/jquery-3.6.4.js"></script>
@@ -24,49 +24,30 @@
 
 </head>
 <body class="p-1">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black text-light rounded rounded-1 m-0">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Administradores", "Index", "Administradores", null, new { @class = "nav-link" })</li>
 
-
-
-                </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded rounded-1">
+        <a class="navbar-brand" href="#">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link text-light" })</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between " id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link text-light" })</li>
+                <li class="nav-item">@Html.ActionLink("Admins", "Index", "Administradores", null, new { @class = "nav-link" })</li>
+            </ul>
+            <div class="d-inline-flex justify-content-center align-content-center m-1">
+                @{
+                    var user = (GestionDeportiva.Models.Administradores)Session["UserProfile"];
+                    if (user != null)
+                    {
+                        <div class="d-inline-flex text-light">
+                            Hola @user.Nombre | @Html.ActionLink("Salir", "CloseSession", "Administradores", null, new { @class = "nav-link" })
+                        </div>
+                    }
+                }
             </div>
         </div>
-        <div class="d-inline-flex justify-content-center align-content-center">
-            @{
-                var user = (GestionDeportiva.Models.Administradores)Session["UserProfile"];
-                if (user != null)
-                {
-                    <label>
-                        Hola @user.Nombre
-                    </label>
-                }
-            }
-        </div>
-    </nav>
-
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-    </div>
+    </nav>   
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -79,7 +60,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-  </body>
+</body>
 
 
 </html>

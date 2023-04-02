@@ -3,15 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Eventos</title>
     <script src="~/Content/Site.js"></script>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/jquery-3.6.4.min.js"></script>
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body class="p-0">
-    <div class="container p-0">     
+<body class="p-1">    
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded rounded-1">
             <a class="navbar-brand" href="#">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link text-light" })</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,16 +21,13 @@
                     <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link text-light" })</li>
                     <li class="nav-item">@Html.ActionLink("Login", "Login", "Administradores", null, new { @class = "nav-link text-light" })</li>
                 </ul>
-                @using (Html.BeginForm("Search", "Eventos", FormMethod.Post, new { @class = "d-flex form-inline" }))
+                @using (Html.BeginForm("Search", "Eventos", FormMethod.Post, new { @class = "d-flex form-inline gap-1 m-1" }))
                 {
                     <input name="EventoNombre" class="form-control mr-sm-2" type="search" placeholder="Evento" aria-label="Search">
                     <button class="btn btn-outline-success bg-light my-2 my-sm-0" type="submit">Search</button>
                 }
-
             </div>
-        </nav>
-
-    </div>      
+        </nav>        
     <div class="container body-content">
         @RenderBody()
         <hr />
