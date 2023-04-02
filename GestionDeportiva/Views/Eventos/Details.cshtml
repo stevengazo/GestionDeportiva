@@ -52,14 +52,11 @@
 </div>
 
 
-
-
-
-
-
-
-
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EventoId }) |
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-info" })
-</p>
+<div class="d-flex gap-2">
+    @if (Session["UserProfile"] != null)
+    {
+        @Html.ActionLink("Editar", "Edit", new { id = Model.EventoId }, new { @class = "btn btn-outline-success" })
+        @Html.ActionLink("Eliminar", "Delete", new { id = Model.EventoId }, new { @class = "btn btn-outline-danger" })
+    }
+    @Html.ActionLink("Volver Atrás", "Index", null, new { @class = "btn btn-outline-info" })
+</div>

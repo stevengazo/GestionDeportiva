@@ -8,22 +8,17 @@
 }
 
 
-<h1 class="d-flex align-content-center">
-    Activades Recreativas
-</h1>
-
-
-<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+<div id="carouselExampleCaptions" class="carousel slide m-2 data-bs-ride="carousel">
     <div class="carousel-inner">
         @foreach (var item in Model)
         {
-            <div class="carousel-item active">
+            <div class="carousel-item active"  data-bs-interval="2000" >
                 <!--
                     Explicación src= ($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")
                     el {Convert.ToBase64String(item.Imagen) convierte el Byte[] que viene desde la DB y lo convierte en un Base64 interpretable por el navegador
                 -->
                 <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class=" img-fluid object-fit-cover  d-block w-100" alt="..." style="height:45rem" >
-                <div class="carousel-caption d-none d-md-block bg-dark opacity-75 rounded-2 ">
+                <div class="carousel-caption d-none d-md-block bg-dark opacity-75 rounded-2">
                     <h5>@item.Nombre</h5>
                     <p>@item.Descripcion</p>
                     <p>@item.Fecha.Value.ToLongDateString()</p>
