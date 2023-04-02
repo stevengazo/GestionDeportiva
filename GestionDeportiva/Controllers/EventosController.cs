@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using GestionDeportiva.Models;
 using System.IO;
 using System.Drawing;
+using System.Security.Cryptography;
 
 namespace GestionDeportiva.Controllers
 {
@@ -23,6 +24,17 @@ namespace GestionDeportiva.Controllers
             var eventos = db.Eventos.Include(e => e.TiposEventos).OrderByDescending(e => e.Fecha);           
             return View(await eventos.ToListAsync());
         }
+
+        public async Task<ActionResult> Search( [Bind(Include = "EventoNombre")] string EventoNombre )
+        {
+            ViewBag.ValorBuscado = EventoNombre;
+            List<Eventos> eventos = new List<Eventos>();
+            eventos = (from evento in db.Eventos
+                           where evento.Nombre.Contains(EventoNombre) || evento.Descripcion.Contains(EventoNombre)
+                           select evento).ToList();
+            return View(eventos);
+        }
+
 
         // GET: Eventos/Details/5
         public async Task<ActionResult> Details(int? id)

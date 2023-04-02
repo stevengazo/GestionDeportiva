@@ -22,10 +22,12 @@
                     <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link text-light" })</li>
                     <li class="nav-item">@Html.ActionLink("Login", "Login", "Administradores", null, new { @class = "nav-link text-light" })</li>
                 </ul>
-                <form class=" d-flex form-inline" me>
-                    <input class="form-control mr-sm-2" type="search" placeholder="Evento" aria-label="Search">
+                @using (Html.BeginForm("Search", "Eventos", FormMethod.Post, new { @class = "d-flex form-inline" }))
+                {
+                    <input name="EventoNombre" class="form-control mr-sm-2" type="search" placeholder="Evento" aria-label="Search">
                     <button class="btn btn-outline-success bg-light my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                }
+
             </div>
         </nav>
 

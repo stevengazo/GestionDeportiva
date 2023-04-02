@@ -1,22 +1,16 @@
-﻿@model GestionDeportiva.Models.TiposEventos
+﻿@model List<GestionDeportiva.Models.Eventos>
 
 @{
-    ViewBag.Title = $"Detalles - {Model.Nombre}";
+    ViewBag.Title = "Busqueda";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div>
-    <h1>Tipo Evento</h1>
-    <hr />
-    <h2>
-                @Html.DisplayFor(model => model.Nombre)
-    </h2>    
-</div>
+<h2>Resultados de la Busqueda: @ViewBag.ValorBuscado</h2>
 
-<div class="d-flex gap-3 p-3 flex-wrap justify-content-center bg-primary bg-opacity-50">
-    @foreach (GestionDeportiva.Models.Eventos item in @ViewBag.Eventos)
-    {
-        if (item != null)
+@if (Model.Count > 0)
+{
+    <div class="d-flex gap-3 p-3 flex-wrap justify-content-center">
+        @foreach (var item in Model)
         {
             <div class="card m-1" style="width: 18rem;">
                 <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class="card-img-top" alt="...">
@@ -28,14 +22,14 @@
                 </div>
             </div>
         }
-
-    }
+    </div>
+}
+else
+{
+<div>
+    <p class="text-danger">
+        No hay coincidencias con el valor sugerido.
+    </p>
 </div>
-
-<div class="d-inline-flex">
-    @if (Session["UserProfile"] != null)
-    {
-        @Html.ActionLink("Editar", "Edit", new { id = Model.TipoEventoId }, new { @class = "btn btn-outline-success" })
-    }
-    @Html.ActionLink("Volver Atrás", "Index", null, new { @class = "btn btn-outline-info" })
-</div>
+    
+}
