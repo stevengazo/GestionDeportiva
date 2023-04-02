@@ -42,8 +42,16 @@ namespace GestionDeportiva.Controllers
         // GET: Eventos/Create
         public ActionResult Create()
         {
-            ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre");
-            return View();
+			var user = Session["UserProfile"];
+            if (user != null)
+            {
+                ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(AdministradoresController.Login),"Administradores");
+            }
         }
 
         // POST: Eventos/Create
@@ -53,28 +61,35 @@ namespace GestionDeportiva.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "EventoId,Nombre,Descripcion,Fecha,Lugar,TipoEventoId")] Eventos eventos)
         {
-
-
-			if (ModelState.IsValid)
+			var user = Session["UserProfile"];
+            if (user != null)
             {
-                if (Request.FilePath[0] != null)
-                {
-                    /*
-                     recibe la imagen en Request.Files 
-                     */
-					var file = Request.Files[0];
-                    // Convierte el archivo recibido en un Byte[] para luego asignarlo al Objeto de tipo Evento (el cual se almacenará en la base de datos)
-					MemoryStream target = new MemoryStream();
-					file.InputStream.CopyTo(target);
-					eventos.Imagen = target.ToArray();
-				}
-				db.Eventos.Add(eventos);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
-            return View(eventos);
+                if (ModelState.IsValid)
+                {
+                    if (Request.FilePath[0] != null)
+                    {
+                        /*
+                         recibe la imagen en Request.Files 
+                         */
+                        var file = Request.Files[0];
+                        // Convierte el archivo recibido en un Byte[] para luego asignarlo al Objeto de tipo Evento (el cual se almacenará en la base de datos)
+                        MemoryStream target = new MemoryStream();
+                        file.InputStream.CopyTo(target);
+                        eventos.Imagen = target.ToArray();
+                    }
+                    db.Eventos.Add(eventos);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
+                return View(eventos);
+            }
+            else
+            {
+				return RedirectToAction(nameof(AdministradoresController.Login), "Administradores");
+			}
         }
 
         // GET: Eventos/Edit/5

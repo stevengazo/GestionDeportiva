@@ -20,28 +20,53 @@ namespace GestionDeportiva.Controllers
         // GET: Administradores
         public async Task<ActionResult> Index()
         {
-            return View(await db.Administradores.ToListAsync());
-        }
+			var user = Session["UserProfile"];
+            if (user != null)
+            {
+				return View(await db.Administradores.ToListAsync());
+
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+		}
 
         // GET: Administradores/Details/5
         public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
+			var user = Session["UserProfile"];
+            if (user != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Administradores administradores = await db.Administradores.FindAsync(id);
+                if (administradores == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(administradores);
             }
-            Administradores administradores = await db.Administradores.FindAsync(id);
-            if (administradores == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction(nameof(Login));
             }
-            return View(administradores);
         }
 
         // GET: Administradores/Create
         public ActionResult Create()
         {
-            return View();
+			var user = Session["UserProfile"];
+            if (user != null)
+            {
+				return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }			
         }
 
         // POST: Administradores/Create
@@ -51,30 +76,46 @@ namespace GestionDeportiva.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "AdministradorId,NombreUsuario,Nombre,Apellidos,HashContrasena")] Administradores administradores)
         {
-            if (ModelState.IsValid)
+			var user = Session["UserProfile"];
+            if(user!= null)
             {
-
-                administradores.HashContrasena = GetMD5Hash(administradores.HashContrasena);
-                db.Administradores.Add(administradores);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+				if (ModelState.IsValid)
+				{
+					administradores.HashContrasena = GetMD5Hash(administradores.HashContrasena);
+					db.Administradores.Add(administradores);
+					await db.SaveChangesAsync();
+					return RedirectToAction("Index");
+				}
+				return View(administradores);
             }
-            return View(administradores);
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
         }
 
         // GET: Administradores/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
+			var user = Session["UserProfile"];
+            if (user != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Administradores administradores = await db.Administradores.FindAsync(id);
-            if (administradores == null)
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				Administradores administradores = await db.Administradores.FindAsync(id);
+				if (administradores == null)
+				{
+					return HttpNotFound();
+				}
+				return View(administradores);
+			}
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction(nameof(Login));
             }
-            return View(administradores);
+
         }
 
         // POST: Administradores/Edit/5
@@ -84,13 +125,21 @@ namespace GestionDeportiva.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "AdministradorId,NombreUsuario,Nombre,Apellidos,HashContrasena")] Administradores administradores)
         {
-            if (ModelState.IsValid)
+			var user = Session["UserProfile"];
+            if (user != null)
             {
-                db.Entry(administradores).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(administradores);
+				if (ModelState.IsValid)
+				{
+					db.Entry(administradores).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+					return RedirectToAction("Index");
+				}
+				return View(administradores);
+			}
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }			
         }
 
         // GET: Administradores/Delete/5
@@ -122,10 +171,18 @@ namespace GestionDeportiva.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Administradores administradores = await db.Administradores.FindAsync(id);
-            db.Administradores.Remove(administradores);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+			var user = Session["UserProfile"];
+            if (user != null)
+            {
+                Administradores administradores = await db.Administradores.FindAsync(id);
+                db.Administradores.Remove(administradores);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -153,6 +210,7 @@ namespace GestionDeportiva.Controllers
                 {
                     Administradores UserActive = GetAdministradores(idUsuario);
                     Session["UserProfile"] = UserActive;
+                    Session.Timeout = 2;
                     Session["UserName"] = UserActive.Nombre;
 					return RedirectToAction(nameof(Index));
                 }
