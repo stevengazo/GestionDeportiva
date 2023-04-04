@@ -8,16 +8,27 @@
 }
 
 
+@if (Session["UserProfile"] != null)
+{
+    <div class="d-flex m-1">
+        <p>
+            @Html.ActionLink("Crear Event", "Create", "Eventos", new { @class = "btn btn-outline-success" })
+        </p>
+    </div>
+    <hr/>
+}
+
 <div id="carouselExampleCaptions" class="carousel slide m-2 data-bs-ride="carousel">
     <div class="carousel-inner">
+        @{bool firts = false; }
         @foreach (var item in Model)
         {
-            <div class="carousel-item active"  data-bs-interval="2000" >
+            <div class="carousel-item active" data-bs-interval="2000">
                 <!--
                     Explicación src= ($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")
                     el {Convert.ToBase64String(item.Imagen) convierte el Byte[] que viene desde la DB y lo convierte en un Base64 interpretable por el navegador
                 -->
-                <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class=" img-fluid object-fit-cover  d-block w-100" alt="..." style="height:45rem" >
+                <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class=" img-fluid object-fit-cover  d-block w-100" alt="..." style="height:45rem">
                 <div class="carousel-caption d-none d-md-block bg-dark opacity-75 rounded-2">
                     <h5>@item.Nombre</h5>
                     <p>@item.Descripcion</p>
@@ -40,8 +51,6 @@
 <div class="d-flex flex-md-wrap flex-column bg-opacity-50 m-2" style="background-color:lightgray">
     <div class="d-flex justify-content-center">
         <h2>Tabla de Eventos</h2>
-    </div>
-    <div>
         <p>
             lista de eventos disponibles en curso
         </p>
@@ -54,7 +63,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@item.Nombre</h5>
                     <p class="card-text">@item.Descripcion.</p>
-                    <p class="card-text">Fecha: @item.Fecha.Value.ToLongDateString() - @item.Fecha.Value.ToShortTimeString();</p>                    
+                    <p class="card-text">Fecha: @item.Fecha.Value.ToLongDateString() - @item.Fecha.Value.ToShortTimeString();</p>
                     @Html.ActionLink("Ver información", "Details", new { id = item.EventoId }, new { @class = "btn btn-sm btn-outline-primary" })
                 </div>
             </div>

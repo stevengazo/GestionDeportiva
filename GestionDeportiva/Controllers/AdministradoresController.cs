@@ -196,7 +196,15 @@ namespace GestionDeportiva.Controllers
         [HttpGet]
 		public async Task<ActionResult> Login()
 		{
-			return View();
+			var user = Session["UserProfile"];
+			if (user == null)
+            {
+				return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }				
 		}
         [HttpPost]
 		public async Task<ActionResult> Login([Bind(Include = "LoginUser,LoginPassword")] LoginModel login)
@@ -213,6 +221,11 @@ namespace GestionDeportiva.Controllers
                     Session.Timeout = 2;
                     Session["UserName"] = UserActive.Nombre;
 					return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Inicio de Sesión invalido\nRevise el nombre de usuario y contraseña";
+					return View();
                 }
                 return View();
             }catch(Exception f)

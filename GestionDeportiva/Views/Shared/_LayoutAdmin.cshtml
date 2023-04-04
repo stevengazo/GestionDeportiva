@@ -32,6 +32,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-between " id="navbarNav">
             <ul class="navbar-nav">
+                <li class="nav-item">@Html.ActionLink("Nuevo Evento", "Create", "Eventos", null, new { @class = "nav-link text-light" })</li>
                 <li class="nav-item">@Html.ActionLink("Tipos Eventos", "Index", "TiposEventos", null, new { @class = "nav-link text-light" })</li>
                 <li class="nav-item">@Html.ActionLink("Admins", "Index", "Administradores", null, new { @class = "nav-link" })</li>
             </ul>

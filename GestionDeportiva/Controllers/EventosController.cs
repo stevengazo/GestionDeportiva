@@ -11,6 +11,7 @@ using GestionDeportiva.Models;
 using System.IO;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Data.Entity.Migrations;
 
 namespace GestionDeportiva.Controllers
 {
@@ -107,6 +108,7 @@ namespace GestionDeportiva.Controllers
         // GET: Eventos/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -116,7 +118,8 @@ namespace GestionDeportiva.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
+			ViewBag.ErrorMessage = "";
+			ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
             return View(eventos);
         }
 
@@ -125,16 +128,49 @@ namespace GestionDeportiva.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "EventoId,Nombre,Descripcion,Fecha,Lugar,Imagen,TipoEventoId")] Eventos eventos)
+        public async Task<ActionResult> Edit([Bind(Include = "EventoId,Nombre,Descripcion,Fecha,Lugar,TipoEventoId")] Eventos eventos)
         {
-            if (ModelState.IsValid)
+			var user = Session["UserProfile"];
+			if (user != null)
             {
-                db.Entry(eventos).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
-            return View(eventos);
+				if (ModelState.IsValid)
+				{
+                    var data = Request.Files;
+					if (Request.FilePath[0] != null)
+					{
+						var file = Request.Files[0];
+						MemoryStream target = new MemoryStream();
+                        if (string.IsNullOrEmpty(file.FileName))
+                        {
+							var evento = await GetEventoAsync(eventos.EventoId);
+							eventos.Imagen = evento.Imagen;
+						}
+                        else
+                        {
+							file.InputStream.CopyTo(target);
+							eventos.Imagen = target.ToArray();
+						}					
+					}          
+                    if( eventos.Fecha == null)
+                    {
+						var evento = await GetEventoAsync(eventos.EventoId);
+                        eventos.Fecha = evento.Fecha;
+					}
+					using (db)
+                    {
+                        db.Eventos.AddOrUpdate(eventos);
+                        db.SaveChanges();
+                    }
+					return RedirectToAction(nameof(Details), new { id= eventos.EventoId});
+				}
+				ViewBag.ErrorMessage = "";
+				ViewBag.TipoEventoId = new SelectList(db.TiposEventos, "TipoEventoId", "Nombre", eventos.TipoEventoId);
+				return View(eventos);
+			}
+            else
+            {
+                return RedirectToAction(nameof(AdministradoresController.Login), "Administradores");
+            }			
         }
 
         // GET: Eventos/Delete/5
@@ -170,6 +206,20 @@ namespace GestionDeportiva.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+        private Task<Eventos> GetEventoAsync(int id)
+        {
+            try
+            {
+                var data = db.Eventos.Where(E => E.EventoId == id).FirstOrDefaultAsync();
+                return data;
+            }catch(Exception f)
+            {
+                Console.WriteLine(f.Message);
+                return null;
+            }
         }
     }
 }
