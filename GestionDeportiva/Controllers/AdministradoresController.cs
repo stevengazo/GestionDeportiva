@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Security.Cryptography;
 using GestionDeportiva.Models;
 using System.Threading;
+using System.Data.Entity.Migrations;
 
 namespace GestionDeportiva.Controllers
 {
@@ -55,8 +56,75 @@ namespace GestionDeportiva.Controllers
             }
         }
 
-        // GET: Administradores/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult ChangePassword(int? id)
+        {
+			var user = Session["UserProfile"];
+            if (user != null)
+            {
+                var query = (from admin in db.Administradores
+                             where admin.AdministradorId == id
+                             select new { admin.NombreUsuario, admin.HashContrasena }).FirstOrDefault();
+                LoginModel model = new LoginModel()
+                {
+                    LoginUser = query.NombreUsuario,
+                    LoginPassword = ""
+                };
+                return View(model);
+            }
+            else
+            {
+				return RedirectToAction(nameof(Login));
+			}
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword([Bind(Include = "LoginUser,LoginPassword")] LoginModel login)
+		{
+            try
+            {
+                var HashPassword = GetMD5Hash(login.LoginPassword);
+                var user =await GetAdministradoresAsync(login.LoginUser);
+                if(user != null)
+                {
+                    user.HashContrasena = HashPassword;
+                }
+                else
+                {
+                    throw new Exception("Error interno... Intentelo de nuevo");
+                }
+                db.Administradores.AddOrUpdate(user);
+                db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }catch(Exception f)
+            {
+                ViewBag.ErrorMessage = f.Message;
+				return View();
+			}
+            
+        }
+		private async Task<Administradores> GetAdministradoresAsync(string userName)
+        {
+            try
+            {                
+                var user = await ((from admin in db.Administradores
+                        where admin.NombreUsuario.ToUpper() == userName.ToUpper()
+                        select admin).FirstOrDefaultAsync());
+                return user;                
+            }catch(Exception v)
+            {
+                Console.WriteLine(v.Message);
+                return null;
+            }
+
+		}
+		private async Task<Administradores> GetAdministradoresAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+		// GET: Administradores/Create
+		public ActionResult Create()
         {
 			var user = Session["UserProfile"];
             if (user != null)

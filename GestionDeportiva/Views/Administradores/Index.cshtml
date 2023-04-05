@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<GestionDeportiva.Models.Administradores>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Administradores";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Lista de Administradores</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear Usuario", "Create",null,new { @class="btn btn-outline-success"})
 </p>
 <table class="table">
     <tr>
@@ -36,9 +36,9 @@
             @Html.DisplayFor(modelItem => item.Apellidos)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AdministradorId }, new { @class="btn btn-outline-success"}) |
-            @Html.ActionLink("Details", "Details", new { id=item.AdministradorId }, new { @class = "btn btn-outline-info" }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AdministradorId }, new { @class = "btn btn-outline-danger" })
+            @Html.ActionLink("Contraseña", "ChangePassword", new { id=item.AdministradorId }, new { @class="btn btn-outline-success"}) |
+            @Html.ActionLink("Detalles", "Details", new { id=item.AdministradorId }, new { @class = "btn btn-outline-info" }) |
+            @Html.ActionLink("Borrar", "Delete", new { id=item.AdministradorId }, new { @class = "btn btn-outline-danger" })
         </td>
     </tr>
 }
