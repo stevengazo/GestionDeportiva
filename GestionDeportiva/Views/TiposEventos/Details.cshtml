@@ -1,27 +1,41 @@
 ﻿@model GestionDeportiva.Models.TiposEventos
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = $"Detalles - {Model.Nombre}";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>TiposEventos</h4>
+    <h1>Tipo Evento</h1>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-
-    </dl>
+    <h2>
+                @Html.DisplayFor(model => model.Nombre)
+    </h2>    
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TipoEventoId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<div class="d-flex gap-3 p-3 flex-wrap justify-content-center bg-primary bg-opacity-50">
+    @foreach (GestionDeportiva.Models.Eventos item in @ViewBag.Eventos)
+    {
+        if (item != null)
+        {
+            <div class="card m-1" style="width: 18rem;">
+                <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">@item.Descripcion.</p>
+                    <p class="card-text">Fecha: @item.Fecha.Value.ToLongDateString() - @item.Fecha.Value.ToShortTimeString();</p>
+                    @Html.ActionLink("Ver información", "Details", "Eventos", new { id = item.EventoId }, new { @class = "btn btn-sm btn-outline-primary" })
+                </div>
+            </div>
+        }
+
+    }
+</div>
+
+<div class="d-inline-flex">
+    @if (Session["UserProfile"] != null)
+    {
+        @Html.ActionLink("Editar", "Edit", new { id = Model.TipoEventoId }, new { @class = "btn btn-outline-success" })
+    }
+    @Html.ActionLink("Volver Atrás", "Index", null, new { @class = "btn btn-outline-info" })
+</div>

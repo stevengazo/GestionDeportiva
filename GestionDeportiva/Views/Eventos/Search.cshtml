@@ -1,0 +1,35 @@
+﻿@model List<GestionDeportiva.Models.Eventos>
+
+@{
+    ViewBag.Title = "Busqueda";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Resultados de la Busqueda: @ViewBag.ValorBuscado</h2>
+
+@if (Model.Count > 0)
+{
+    <div class="d-flex gap-3 p-3 flex-wrap justify-content-center">
+        @foreach (var item in Model)
+        {
+            <div class="card m-1" style="width: 18rem;">
+                <img src="@($"Data:image/PNG;base64,{Convert.ToBase64String(item.Imagen)}")" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text">@item.Descripcion.</p>
+                    <p class="card-text">Fecha: @item.Fecha.Value.ToLongDateString() - @item.Fecha.Value.ToShortTimeString();</p>
+                    @Html.ActionLink("Ver información", "Details", new { id = item.EventoId }, new { @class = "btn btn-sm btn-outline-primary" })
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+<div>
+    <p class="text-danger">
+        No hay coincidencias con el valor sugerido.
+    </p>
+</div>
+    
+}

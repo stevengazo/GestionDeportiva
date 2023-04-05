@@ -29,11 +29,14 @@ namespace GestionDeportiva.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             TiposEventos tiposEventos = await db.TiposEventos.FindAsync(id);
+            
             if (tiposEventos == null)
             {
                 return HttpNotFound();
             }
-            return View(tiposEventos);
+            var data = (from evento in db.Eventos where evento.TipoEventoId == tiposEventos.TipoEventoId select evento).ToList();
+            ViewBag.Eventos = data;
+			return View(tiposEventos);
         }
 
         // GET: TiposEventos/Create

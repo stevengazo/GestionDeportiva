@@ -5,30 +5,33 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="d-flex m-1">
+    @if (Session["UserProfile"] != null)
+    {
+        <p>
+            @Html.ActionLink("Crear Categoría", "Create", null, new { @class = "btn btn-outline-success" })
+        </p>
+    }
+</div>
+<div class="d-flex flex-md-wrap flex-column bg-opacity-50 m-2" style="background-color:lightgray">
+    <div class="d-flex justify-content-center">
+        <h2>Tipos de Eventos Rexistentes</h2>
+    </div>
+    <div class="d-flex gap-3 p-3 flex-wrap justify-content-center">
+        @foreach (var item in Model)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Categoría</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@item.Nombre</h6>
+                    @Html.ActionLink("Ver eventos", "Details", new { id = item.TipoEventoId }, new { @class = "btn btn-sm btn-outline-primary" })
+                    @if (Session["UserProfile"] != null)
+                    {
+                        @Html.ActionLink("Editar", "Edit", new { id = item.TipoEventoId }, new { @class = "btn btn-sm btn-outline-success" })
+                    }
+                </div>
+            </div>
+        }
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TipoEventoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TipoEventoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TipoEventoId })
-        </td>
-    </tr>
-}
-
-</table>
+</div>
